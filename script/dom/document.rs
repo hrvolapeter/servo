@@ -4,6 +4,8 @@
 
 use dom_struct::dom_struct;
 use dom::bindings::reflector::Reflector;
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 
 
 /// The number of times we are allowed to see spurious `requestAnimationFrame()` calls before
@@ -17,8 +19,9 @@ const FAKE_REQUEST_ANIMATION_FRAME_DELAY: u64 = 16;
 
 /// <https://dom.spec.whatwg.org/#document>
 #[dom_struct]
-pub struct Document {
+pub struct Document<TH: TypeHolderTrait + 'static> {
     a: Reflector,
+    phantom: PhantomData<TH>,
 }
 
 #[derive(Clone, Copy, Eq, JSTraceable, MallocSizeOf, PartialEq)]

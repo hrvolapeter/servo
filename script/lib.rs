@@ -109,5 +109,5 @@ extern crate xml5ever;
 pub mod task;
 pub mod dom;
 pub mod script_thread;
-
+pub mod typeholder;
 pub mod mem;

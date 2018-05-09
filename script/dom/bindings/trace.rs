@@ -117,6 +117,7 @@ use time::Duration;
 use uuid::Uuid;
 use webrender_api::{DocumentId, ImageKey};
 use webvr_traits::WebVRGamepadHand;
+use std::marker::PhantomData;
 
 /// A trait to allow tracing (only) DOM objects.
 pub unsafe trait JSTraceable {
@@ -428,6 +429,13 @@ unsafe_no_jsmanaged_fields!(InteractiveMetrics);
 unsafe_no_jsmanaged_fields!(InteractiveWindow);
 
 unsafe impl<'a> JSTraceable for &'a str {
+    #[inline]
+    unsafe fn trace(&self, _: *mut JSTracer) {
+        // Do nothing
+    }
+}
+
+unsafe impl<T: JSTraceable> JSTraceable for PhantomData<T> {
     #[inline]
     unsafe fn trace(&self, _: *mut JSTracer) {
         // Do nothing
