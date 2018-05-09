@@ -9,6 +9,20 @@ use dom::bindings::inheritance::Castable;
 #[derive(Copy, Clone)]
 pub union TopTypeId {
     pub alone: (),
+    pub eventtarget: EventTargetTypeId,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum EventTargetTypeId {
+    EventTarget,
+    Node(NodeTypeId),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum NodeTypeId {
+    DocumentFragment,
+    DocumentType,
+    Document(DocumentTypeId),
 }
 
 impl Castable for GlobalScope {}
@@ -23,3 +37,9 @@ impl DerivedFrom<Node> for Node {}
 
 impl Castable for Window {}
 impl DerivedFrom<GlobalScope> for Window {}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum DocumentTypeId {
+    Document,
+    XMLDocument
+}
