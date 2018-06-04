@@ -88,8 +88,8 @@ pub struct DOMClass {
     /// The type ID of that interface.
     pub type_id: TopTypeId,
 
-    /// The MallocSizeOf function wrapper for that interface.
-    pub malloc_size_of: unsafe fn(ops: &mut MallocSizeOfOps, *const c_void) -> usize,
+    /// TODO: The MallocSizeOf function wrapper for that interface.
+    // pub malloc_size_of: unsafe fn(ops: &mut MallocSizeOfOps, *const c_void) -> usize,
 
     /// The `Globals` flag for this global interface, if any.
     pub global: InterfaceObjectMap::Globals,

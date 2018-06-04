@@ -8,7 +8,7 @@ use std::marker::PhantomData;
 #[dom_struct]
 pub struct Window<TH: TypeHolderTrait> {
     a: Reflector,
-    _p: PhantomData<TH>,
+    _p: PhantomData<TH>
 }
 
 impl<TH: TypeHolderTrait> IDLInterface for Window<TH> {

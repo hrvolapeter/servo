@@ -16,6 +16,7 @@ pub mod abstractworker;
 pub mod domexception;
 pub mod promise;
 pub mod reflect;
+pub mod xmldocument;
 
 pub mod types {
     use dom_struct::dom_struct;
