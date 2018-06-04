@@ -10,17 +10,13 @@ use dom::bindings::refcounted::Trusted;
 use dom::bindings::reflector::{DomObject, Reflector, reflect_dom_object};
 use dom::bindings::root::DomRoot;
 use dom::bindings::str::DOMString;
-use dom::event::{Event, EventBubbles, EventCancelable};
-use dom::storageevent::StorageEvent;
 use dom::window::Window;
 use dom_struct::dom_struct;
 use ipc_channel::ipc::IpcSender;
 use net_traits::IpcSend;
 use net_traits::storage_thread::{StorageThreadMsg, StorageType};
-use profile_traits::ipc;
 use script_traits::ScriptMsg;
 use servo_url::ServoUrl;
-use task_source::TaskSource;
 use typeholder::TypeHolderTrait;
 use std::marker::PhantomData;
 
