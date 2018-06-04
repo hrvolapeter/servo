@@ -35,7 +35,7 @@ impl<TH: TypeHolderTrait> IDLInterface for XMLDocument<TH> {
 }
 
 impl<TH: TypeHolderTrait> XMLDocument<TH> {
-    fn new_inherited(window: &Window,
+    fn new_inherited(window: &Window<TH>,
                      has_browsing_context: HasBrowsingContext,
                      url: Option<ServoUrl>,
                      origin: MutableOrigin,
@@ -49,7 +49,7 @@ impl<TH: TypeHolderTrait> XMLDocument<TH> {
         }
     }
 
-    pub fn new(window: &Window,
+    pub fn new(window: &Window<TH>,
                has_browsing_context: HasBrowsingContext,
                url: Option<ServoUrl>,
                origin: MutableOrigin,

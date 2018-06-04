@@ -4,10 +4,7 @@
 
 use cookie_rs;
 use devtools_traits::ScriptToDevtoolsControlMsg;
-use document_loader::{DocumentLoader, LoadType};
-use dom::activation::{ActivationSource, synthetic_click_activation};
 use dom::attr::Attr;
-use dom::beforeunloadevent::BeforeUnloadEvent;
 use dom::bindings::callback::ExceptionHandling;
 use dom::bindings::codegen::Bindings::DocumentBinding;
 use dom::bindings::codegen::Bindings::DocumentBinding::{DocumentMethods, DocumentReadyState, ElementCreationOptions};
@@ -19,8 +16,6 @@ use dom::bindings::refcounted::{Trusted, TrustedPromise};
 use dom::bindings::reflector::{DomObject, reflect_dom_object};
 use dom::bindings::root::{Dom, DomRoot, LayoutDom, MutNullableDom, RootedReference};
 use dom::bindings::str::{DOMString, USVString};
-use dom::bindings::xmlname::{namespace_from_domstring, validate_and_extract, xml_name_type};
-use dom::bindings::xmlname::XMLName::InvalidXMLName;
 use dom::customelementregistry::CustomElementDefinition;
 use dom::element::{Element, ElementCreator, ElementPerformFullscreenEnter, ElementPerformFullscreenExit};
 use dom::element::CustomElementCreationMode;
@@ -34,7 +29,6 @@ use dom::windowproxy::WindowProxy;
 use dom_struct::dom_struct;
 use encoding_rs::{Encoding, UTF_8};
 use euclid::Point2D;
-use fetch::FetchCanceller;
 use html5ever::{LocalName, Namespace, QualName};
 use hyper::header::{Header, SetCookie};
 use hyper_serde::Serde;
@@ -51,11 +45,7 @@ use net_traits::pub_domains::is_pub_domain;
 use net_traits::request::RequestInit;
 use net_traits::response::HttpsState;
 use num_traits::ToPrimitive;
-use profile_traits::ipc;
-use profile_traits::time::{TimerMetadata, TimerMetadataFrameType, TimerMetadataReflowType};
 use ref_slice::ref_slice;
-use script_layout_interface::message::{Msg, NodesFromPointQueryType, QueryMsg, ReflowGoal};
-use script_runtime::{CommonScriptMsg, ScriptThreadEventCategory};
 use script_thread::{MainThreadScriptMsg, ScriptThread};
 use script_traits::{AnimationState, DocumentActivity, MouseButton, MouseEventType};
 use script_traits::{MsDuration, ScriptMsg, TouchEventType, TouchId, UntrustedNodeAddress};
@@ -81,13 +71,12 @@ use style::shared_lock::{SharedRwLock as StyleSharedRwLock, SharedRwLockReadGuar
 use style::str::{split_html_space_chars, str_join};
 use style::stylesheet_set::DocumentStylesheetSet;
 use style::stylesheets::{CssRule, Stylesheet, Origin, OriginSet};
-use task_source::TaskSource;
 use time;
-use timers::OneshotTimerCallback;
 use url::Host;
 use url::percent_encoding::percent_decode;
 use typeholder::TypeHolderTrait;
 use std::marker::PhantomData;
+use dom::bindings::reflector::Reflector;
 
 // /// The number of times we are allowed to see spurious `requestAnimationFrame()` calls before
 // /// falling back to fake ones.
@@ -184,9 +173,14 @@ use std::marker::PhantomData;
 //     }
 // }
 
+pub struct IsHTMLDocument;
+pub struct DocumentSource;
+pub struct HasBrowsingContext;
+
 /// <https://dom.spec.whatwg.org/#document>
 #[dom_struct]
 pub struct Document<TH: TypeHolderTrait + 'static> {
+    reflector: Reflector
     // node: Node<TH>,
     // window: Dom<Window<TH>>,
     // implementation: MutNullableDom<DOMImplementation<TH>>,

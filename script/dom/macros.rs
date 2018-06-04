@@ -606,7 +606,7 @@ macro_rules! impl_performance_entry_struct (
             entry: PerformanceEntry,
         }
 
-        impl $struct {
+        impl<TH: TypeHolderTrait> $struct {
             fn new_inherited(name: DOMString, start_time: f64, duration: f64)
                 -> $struct {
                 $struct {
@@ -618,7 +618,7 @@ macro_rules! impl_performance_entry_struct (
             }
 
             #[allow(unrooted_must_root)]
-            pub fn new(global: &GlobalScope,
+            pub fn new(global: &GlobalScope<TH>,
                        name: DOMString,
                        start_time: f64,
                        duration: f64) -> DomRoot<$struct> {

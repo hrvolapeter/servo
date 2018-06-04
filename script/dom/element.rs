@@ -19,6 +19,11 @@ use dom::customelementregistry::CustomElementDefinition;
 use typeholder::TypeHolderTrait;
 use std::marker::PhantomData;
 
+
+pub struct ElementCreator;
+pub struct ElementPerformFullscreenEnter;
+pub struct ElementPerformFullscreenExit;
+pub struct CustomElementCreationMode;
 // TODO: Update focus state when the top-level browsing context gains or loses system focus,
 // and when the element enters or leaves a browsing context container.
 // https://html.spec.whatwg.org/multipage/#selector-focus

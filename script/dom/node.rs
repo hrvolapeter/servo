@@ -23,3 +23,12 @@ impl<TH> PartialEq for Node<TH> {
         unimplemented!();
     }
 }
+
+pub struct VecPreOrderInsertionHelper;
+pub struct CloneChildrenFlag;
+pub struct NodeDamage;
+pub fn window_from_node() {
+}
+pub struct NodeFlags;
+pub struct LayoutNodeHelpers;
+pub struct CustomElementCreationMode;

@@ -11,7 +11,7 @@ pub mod XMLDocumentBinding {
     use dom::globalscope::GlobalScope;
     use typeholder::TypeHolderTrait;
 
-    pub unsafe fn Wrap<TH: TypeHolderTrait>(cx: *mut JSContext, scope: &GlobalScope, object: Box<XMLDocument<TH>>) -> DomRoot<XMLDocument<TH>> {
+    pub unsafe fn Wrap<TH: TypeHolderTrait>(cx: *mut JSContext, scope: &GlobalScope<TH>, object: Box<XMLDocument<TH>>) -> DomRoot<XMLDocument<TH>> {
 
 
         let raw = Box::into_raw(object);

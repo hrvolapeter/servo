@@ -23,3 +23,5 @@ impl<TH: TypeHolderTrait> PartialEq for Window<TH> {
         unimplemented!();
     }
 }
+
+pub struct ReflowReason;

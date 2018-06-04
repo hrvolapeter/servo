@@ -31,6 +31,8 @@ pub struct ScriptThread<TH: TypeHolderTrait> {
 	_p: PhantomData<TH>
 }
 
+pub enum MainThreadScriptMsg { }
+
 impl<TH: TypeHolderTrait> ScriptThread<TH> {
     pub fn enqueue_callback_reaction(element: &Element<TH>,
                                      reaction: CallbackReaction,

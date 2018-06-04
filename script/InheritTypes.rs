@@ -52,3 +52,82 @@ pub enum DocumentTypeId {
     Document,
     XMLDocument
 }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum NodeListTypeId {
+    NodeList,
+    RadioNodeList
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum ElementTypeId {
+    Element,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum HTMLElementTypeId {
+    HTMLElement,
+    HTMLAnchorElement,
+    HTMLAreaElement,
+    HTMLBRElement,
+    HTMLBaseElement,
+    HTMLBodyElement,
+    HTMLButtonElement,
+    HTMLCanvasElement,
+    HTMLDListElement,
+    HTMLDataElement,
+    HTMLDataListElement,
+    HTMLDetailsElement,
+    HTMLDialogElement,
+    HTMLDirectoryElement,
+    HTMLDivElement,
+    HTMLEmbedElement,
+    HTMLFieldSetElement,
+    HTMLFontElement,
+    HTMLFormElement,
+    HTMLFrameElement,
+    HTMLFrameSetElement,
+    HTMLHRElement,
+    HTMLHeadElement,
+    HTMLHeadingElement,
+    HTMLHtmlElement,
+    HTMLIFrameElement,
+    HTMLImageElement,
+    HTMLInputElement,
+    HTMLLIElement,
+    HTMLLabelElement,
+    HTMLLegendElement,
+    HTMLLinkElement,
+    HTMLMapElement,
+    HTMLMetaElement,
+    HTMLMeterElement,
+    HTMLModElement,
+    HTMLOListElement,
+    HTMLObjectElement,
+    HTMLOptGroupElement,
+    HTMLOptionElement,
+    HTMLOutputElement,
+    HTMLParagraphElement,
+    HTMLParamElement,
+    HTMLPictureElement,
+    HTMLPreElement,
+    HTMLProgressElement,
+    HTMLQuoteElement,
+    HTMLScriptElement,
+    HTMLSelectElement,
+    HTMLSourceElement,
+    HTMLSpanElement,
+    HTMLStyleElement,
+    HTMLTableCaptionElement,
+    HTMLTableColElement,
+    HTMLTableElement,
+    HTMLTableRowElement,
+    HTMLTableSectionElement,
+    HTMLTemplateElement,
+    HTMLTextAreaElement,
+    HTMLTimeElement,
+    HTMLTitleElement,
+    HTMLTrackElement,
+    HTMLUListElement,
+    HTMLUnknownElement
+}
