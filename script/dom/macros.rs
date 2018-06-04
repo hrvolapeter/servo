@@ -296,6 +296,20 @@ macro_rules! unsafe_no_jsmanaged_fields (
     );
 );
 
+macro_rules! unsafe_no_jsmanaged_fields_generic (
+    ($($ty:ty),+) => (
+        $(
+            #[allow(unsafe_code)]
+            unsafe impl<TH: TypeHolderTrait> $crate::dom::bindings::trace::JSTraceable for $ty {
+                #[inline]
+                unsafe fn trace(&self, _: *mut ::js::jsapi::JSTracer) {
+                    // Do nothing
+                }
+            }
+        )+
+    );
+);
+
 macro_rules! jsmanaged_array (
     ($count:expr) => (
         #[allow(unsafe_code)]

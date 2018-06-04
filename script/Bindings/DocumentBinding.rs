@@ -40,10 +40,10 @@ use dom::bindings::codegen::PrototypeList;
 use dom::bindings::utils::DOMClass;
 use dom::document::Document;
 use dom::bindings::codegen::InterfaceObjectMap;
+use typeholder::TypeHolderTrait;
 
 
-
-pub unsafe fn DefineProxyHandler() -> *const libc::c_void {
+pub unsafe fn DefineProxyHandler<TH: TypeHolderTrait>() -> *const libc::c_void {
     let traps = ProxyTraps {
         enter: None,
         getOwnPropertyDescriptor: Some(getOwnPropertyDescriptor),
@@ -76,15 +76,15 @@ pub unsafe fn DefineProxyHandler() -> *const libc::c_void {
         isConstructor: None,
     };
 
-    CreateProxyHandler(&traps, Class.as_void_ptr())
+    CreateProxyHandler(&traps, Class::<TH>().as_void_ptr())
 }
 
-static Class: DOMClass = DOMClass {
+fn Class<TH: TypeHolderTrait>() -> DOMClass { DOMClass {
     interface_chain: [ PrototypeList::ID::EventTarget, PrototypeList::ID::Node, PrototypeList::ID::Document, PrototypeList::ID::Last, PrototypeList::ID::Last, PrototypeList::ID::Last ],
     type_id: ::dom::bindings::codegen::InheritTypes::TopTypeId { eventtarget: (::dom::bindings::codegen::InheritTypes::EventTargetTypeId::Node(::dom::bindings::codegen::InheritTypes::NodeTypeId::Document(::dom::bindings::codegen::InheritTypes::DocumentTypeId::Document))) },
-    malloc_size_of: malloc_size_of_including_raw_self::<Document<TP>> as unsafe fn(&mut _, _) -> _,
+    malloc_size_of: malloc_size_of_including_raw_self::<Document<TH>> as unsafe fn(&mut _, _) -> _,
     global: InterfaceObjectMap::Globals::EMPTY,
-};
+}}
 
 unsafe extern fn getOwnPropertyDescriptor(cx: *mut JSContext, proxy: RawHandleObject, id: RawHandleId, desc: RawMutableHandle<PropertyDescriptor>) -> bool {
     true

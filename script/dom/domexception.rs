@@ -10,6 +10,8 @@ use dom_struct::dom_struct;
 use dom::bindings::codegen::Bindings::DOMExceptionBinding::DOMExceptionMethods;
 use dom::bindings::utils::DOMClass;
 use dom::bindings::conversions::IDLInterface;
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 
 
 #[repr(u16)]
@@ -39,21 +41,22 @@ pub enum DOMErrorName {
 }
 
 #[dom_struct]
-pub struct DOMException {
+pub struct DOMException<TH: TypeHolderTrait> {
     a: Reflector,
+    _p: PhantomData<TH>,
 }
 
-impl DOMException {
-    fn new_inherited(code: DOMErrorName) -> DOMException {
+impl<TH: TypeHolderTrait> DOMException<TH> {
+    fn new_inherited(code: DOMErrorName) -> DOMException<TH> {
         unimplemented!();
     }
 
-    pub fn new(global: &GlobalScope, code: DOMErrorName) -> DomRoot<DOMException> {
+    pub fn new(global: &GlobalScope<TH>, code: DOMErrorName) -> DomRoot<DOMException<TH>> {
         unimplemented!();
     }
 }
 
-impl DOMExceptionMethods for DOMException {
+impl<TH: TypeHolderTrait> DOMExceptionMethods for DOMException<TH> {
     fn Stringifier(&self) -> DOMString {
         unimplemented!();
     }
@@ -71,15 +74,15 @@ impl DOMExceptionMethods for DOMException {
     }
 }
 
-impl IDLInterface for DOMException {
+impl<TH: TypeHolderTrait> IDLInterface for DOMException<TH> {
     #[inline]
     fn derives(class: &'static DOMClass) -> bool {
         unimplemented!();
     }
 }
 
-impl PartialEq for DOMException {
-    fn eq(&self, other: &DOMException) -> bool {
+impl<TH: TypeHolderTrait> PartialEq for DOMException<TH> {
+    fn eq(&self, other: &DOMException<TH>) -> bool {
         unimplemented!();
     }
 }

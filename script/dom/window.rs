@@ -2,21 +2,24 @@ use dom_struct::dom_struct;
 use dom::bindings::reflector::Reflector;
 use dom::bindings::conversions::IDLInterface;
 use dom::bindings::utils::DOMClass;
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 
 #[dom_struct]
-pub struct Window {
-    a: Reflector
+pub struct Window<TH: TypeHolderTrait> {
+    a: Reflector,
+    _p: PhantomData<TH>,
 }
 
-impl IDLInterface for Window {
+impl<TH: TypeHolderTrait> IDLInterface for Window<TH> {
     #[inline]
     fn derives(class: &'static DOMClass) -> bool {
         unimplemented!();
     }
 }
 
-impl PartialEq for Window {
-    fn eq(&self, other: &Window) -> bool {
+impl<TH: TypeHolderTrait> PartialEq for Window<TH> {
+    fn eq(&self, other: &Window<TH>) -> bool {
         unimplemented!();
     }
 }

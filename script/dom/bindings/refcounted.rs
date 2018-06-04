@@ -38,6 +38,7 @@ use std::marker::PhantomData;
 use std::rc::Rc;
 use std::sync::{Arc, Weak};
 use task::TaskOnce;
+use typeholder::TypeHolderTrait;
 
 #[allow(missing_docs)] // FIXME
 mod dummy {
@@ -65,20 +66,21 @@ impl TrustedReference {
 /// A safe wrapper around a DOM Promise object that can be shared among threads for use
 /// in asynchronous operations. The underlying DOM object is guaranteed to live at least
 /// as long as the last outstanding `TrustedPromise` instance. These values cannot be cloned,
-/// only created from existing Rc<Promise> values.
-pub struct TrustedPromise {
-    dom_object: *const Promise,
+/// only created from existing Rc<Promise<TH>> values.
+pub struct TrustedPromise<TH: TypeHolderTrait> {
+    dom_object: *const Promise<TH>,
     owner_thread: *const libc::c_void,
+    _p: PhantomData<TH>
 }
 
-unsafe impl Send for TrustedPromise {}
+unsafe impl<TH: TypeHolderTrait> Send for TrustedPromise<TH> {}
 
-impl TrustedPromise {
+impl<TH: TypeHolderTrait> TrustedPromise<TH> {
     /// Create a new `TrustedPromise` instance from an existing DOM object. The object will
     /// be prevented from being GCed for the duration of the resulting `TrustedPromise` object's
     /// lifetime.
     #[allow(unrooted_must_root)]
-    pub fn new(promise: Rc<Promise>) -> TrustedPromise {
+    pub fn new(promise: Rc<Promise<TH>>) -> TrustedPromise<TH> {
         LIVE_REFERENCES.with(|ref r| {
             let r = r.borrow();
             let live_references = r.as_ref().unwrap();
@@ -95,7 +97,7 @@ impl TrustedPromise {
     /// a different thread than the original value from which this `TrustedPromise` was
     /// obtained.
     #[allow(unrooted_must_root)]
-    pub fn root(self) -> Rc<Promise> {
+    pub fn root(self) -> Rc<Promise<TH>> {
         LIVE_REFERENCES.with(|ref r| {
             let r = r.borrow();
             let live_references = r.as_ref().unwrap();
@@ -129,7 +131,7 @@ impl TrustedPromise {
 
     /// A task which will reject the promise.
     #[allow(unrooted_must_root)]
-    pub fn reject_task(self, error: Error) -> impl TaskOnce {
+    pub fn reject_task<TH: TypeHolderTrait>(self, error: Error<TH>) -> impl TaskOnce {
         let this = self;
         task!(reject_promise: move || {
             debug!("Rejecting promise.");
@@ -209,13 +211,13 @@ impl<T: DomObject> Clone for Trusted<T> {
 /// The set of live, pinned DOM objects that are currently prevented
 /// from being garbage collected due to outstanding references.
 #[allow(unrooted_must_root)]
-pub struct LiveDOMReferences {
+pub struct LiveDOMReferences<TH: TypeHolderTrait> {
     // keyed on pointer to Rust DOM object
     reflectable_table: RefCell<HashMap<*const libc::c_void, Weak<TrustedReference>>>,
-    promise_table: RefCell<HashMap<*const Promise, Vec<Rc<Promise>>>>,
+    promise_table: RefCell<HashMap<*const Promise<TH>, Vec<Rc<Promise<TH>>>>>,
 }
 
-impl LiveDOMReferences {
+impl<TH: TypeHolderTrait> LiveDOMReferences<TH> {
     /// Set up the thread-local data required for storing the outstanding DOM references.
     pub fn initialize() {
         LIVE_REFERENCES.with(|ref r| {
@@ -227,7 +229,7 @@ impl LiveDOMReferences {
     }
 
     #[allow(unrooted_must_root)]
-    fn addref_promise(&self, promise: Rc<Promise>) {
+    fn addref_promise(&self, promise: Rc<Promise<TH>>) {
         let mut table = self.promise_table.borrow_mut();
         table.entry(&*promise).or_insert(vec![]).push(promise)
     }

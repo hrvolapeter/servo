@@ -5,6 +5,7 @@ use dom::node::Node;
 use dom::window::Window;
 use dom::bindings::conversions::DerivedFrom;
 use dom::bindings::inheritance::Castable;
+use typeholder::TypeHolderTrait;
 
 #[derive(Copy, Clone)]
 pub union TopTypeId {
@@ -25,18 +26,18 @@ pub enum NodeTypeId {
     Document(DocumentTypeId),
 }
 
-impl Castable for GlobalScope {}
-impl DerivedFrom<GlobalScope> for GlobalScope {}
+impl<TH: TypeHolderTrait> Castable for GlobalScope<TH> {}
+impl<TH: TypeHolderTrait> DerivedFrom<GlobalScope<TH>> for GlobalScope<TH> {}
 
-impl Castable for Element {}
-impl DerivedFrom<Element> for Element {}
-impl DerivedFrom<Node> for Element {}
+impl<TH: TypeHolderTrait> Castable for Element<TH> {}
+impl<TH: TypeHolderTrait> DerivedFrom<Element<TH>> for Element<TH> {}
+impl<TH: TypeHolderTrait> DerivedFrom<Node<TH>> for Element<TH> {}
 
-impl Castable for Node {}
-impl DerivedFrom<Node> for Node {}
+impl<TH: TypeHolderTrait> Castable for Node<TH> {}
+impl<TH: TypeHolderTrait> DerivedFrom<Node<TH>> for Node<TH> {}
 
-impl Castable for Window {}
-impl DerivedFrom<GlobalScope> for Window {}
+impl<TH: TypeHolderTrait> Castable for Window<TH> {}
+impl<TH: TypeHolderTrait> DerivedFrom<GlobalScope<TH>> for Window<TH> {}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum DocumentTypeId {

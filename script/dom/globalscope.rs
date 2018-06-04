@@ -12,14 +12,17 @@ use dom::bindings::reflector::DomObject;
 use dom::bindings::error::ErrorInfo;
 use js::jsapi::HandleValue;
 use dom::bindings::reflector::Reflector;
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 
 
 #[dom_struct]
-pub struct GlobalScope {
+pub struct GlobalScope<TH: TypeHolderTrait> {
     a: Reflector,
+    _p: PhantomData<TH>
 }
 
-impl GlobalScope {
+impl<TH: TypeHolderTrait> GlobalScope<TH> {
      pub fn get_cx(&self) -> *mut JSContext {
         unimplemented!();
     }
@@ -52,15 +55,15 @@ impl GlobalScope {
     }
 }
 
-impl IDLInterface for GlobalScope {
+impl<TH: TypeHolderTrait> IDLInterface for GlobalScope<TH> {
     #[inline]
     fn derives(class: &'static DOMClass) -> bool {
         unimplemented!();
     }
 }
 
-impl PartialEq for GlobalScope {
-    fn eq(&self, other: &GlobalScope) -> bool {
+impl<TH: TypeHolderTrait> PartialEq for GlobalScope<TH> {
+    fn eq(&self, other: &GlobalScope<TH>) -> bool {
         unimplemented!();
     }
 }

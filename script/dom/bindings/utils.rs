@@ -80,7 +80,7 @@ pub const JSCLASS_DOM_GLOBAL: u32 = js::JSCLASS_USERBIT1;
 
 /// The struct that holds inheritance information for DOM object reflectors.
 #[derive(Clone, Copy)]
-pub struct DOMClass<TH: TypeHolderTrait> {
+pub struct DOMClass {
     /// A list of interfaces that this object implements, in order of decreasing
     /// derivedness.
     pub interface_chain: [PrototypeList::ID; MAX_PROTO_CHAIN_LENGTH],

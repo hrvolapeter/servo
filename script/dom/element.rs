@@ -16,22 +16,25 @@ use std::rc::Rc;
 use style::attr::AttrValue;
 use dom::bindings::str::DOMString;
 use dom::customelementregistry::CustomElementDefinition;
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 
 // TODO: Update focus state when the top-level browsing context gains or loses system focus,
 // and when the element enters or leaves a browsing context container.
 // https://html.spec.whatwg.org/multipage/#selector-focus
 
 #[dom_struct]
-pub struct Element {
+pub struct Element<TH: TypeHolderTrait> {
     a: Reflector,
+    _p: PhantomData<TH>,
 }
 
-impl Element {
-    pub fn get_attribute(&self, namespace: &Namespace, local_name: &LocalName) -> Option<DomRoot<Attr>> {
+impl<TH: TypeHolderTrait> Element<TH> {
+    pub fn get_attribute(&self, namespace: &Namespace, local_name: &LocalName) -> Option<DomRoot<Attr<TH>>> {
         unimplemented!();
     }
 
-    pub fn will_mutate_attr(&self, attr: &Attr) {
+    pub fn will_mutate_attr(&self, attr: &Attr<TH>) {
         unimplemented!();
     }
 
@@ -52,7 +55,7 @@ impl Element {
     }
 }
 
-impl fmt::Debug for Element {
+impl<TH: TypeHolderTrait> fmt::Debug for Element<TH> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         unimplemented!();
     }
@@ -66,15 +69,15 @@ pub enum AttributeMutation<'a> {
     Set(Option<&'a AttrValue>),
 }
 
-impl IDLInterface for Element {
+impl<TH: TypeHolderTrait> IDLInterface for Element<TH> {
     #[inline]
     fn derives(class: &'static DOMClass) -> bool {
         unimplemented!();
     }
 }
 
-impl PartialEq for Element {
-    fn eq(&self, other: &Element) -> bool {
+impl<TH: TypeHolderTrait> PartialEq for Element<TH> {
+    fn eq(&self, other: &Element<TH>) -> bool {
         unimplemented!();
     }
 }

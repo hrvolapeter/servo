@@ -9,17 +9,18 @@ use dom::bindings::root::DomRoot;
 use dom::globalscope::GlobalScope;
 use js::jsapi::{HandleObject, Heap, JSContext, JSObject};
 use std::default::Default;
+use typeholder::TypeHolderTrait;
 
 /// Create the reflector for a new DOM object and yield ownership to the
 /// reflector.
-pub fn reflect_dom_object<T, U>(
+pub fn reflect_dom_object<T, U, TH: TypeHolderTrait>(
     obj: Box<T>,
     global: &U,
-    wrap_fn: unsafe fn(*mut JSContext, &GlobalScope, Box<T>) -> DomRoot<T>,
+    wrap_fn: unsafe fn(*mut JSContext, &GlobalScope<TH>, Box<T>) -> DomRoot<T>,
 ) -> DomRoot<T>
     where
         T: DomObject,
-        U: DerivedFrom<GlobalScope>,
+        U: DerivedFrom<GlobalScope<TH>>,
 {
     let global_scope = global.upcast();
     unsafe { wrap_fn(global_scope.get_cx(), global_scope, obj) }
@@ -73,15 +74,16 @@ impl Reflector {
 
 /// A trait to provide access to the `Reflector` for a DOM object.
 pub trait DomObject: 'static {
+    type TypeHolder: TypeHolderTrait;
     /// Returns the receiver's reflector.
     fn reflector(&self) -> &Reflector;
 
     /// Returns the global scope of the realm that the DomObject was created in.
-    fn global(&self) -> DomRoot<GlobalScope>
+    fn global(&self) -> DomRoot<GlobalScope<Self::TypeHolder>>
         where
             Self: Sized,
     {
-        GlobalScope::from_reflector(self)
+        GlobalScope::<Self::TypeHolder>::from_reflector(self)
     }
 }
 

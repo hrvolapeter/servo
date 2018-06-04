@@ -9,18 +9,21 @@ use std::rc::Rc;
 use dom::bindings::reflector::Reflector;
 use dom::node::Node;
 use dom::bindings::str::DOMString;
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 
 pub enum Mutation {
     Attribute { name: LocalName, namespace: Namespace, old_value: DOMString },
 }
 
 #[dom_struct]
-pub struct MutationObserver {
+pub struct MutationObserver<TH: TypeHolderTrait> {
     a: Reflector,
+    _p: PhantomData<TH>,
 }
 
-impl MutationObserver {
-    pub fn queue_a_mutation_record(target: &Node, attr_type: Mutation) {
+impl<TH: TypeHolderTrait> MutationObserver<TH> {
+    pub fn queue_a_mutation_record(target: &Node<TH>, attr_type: Mutation) {
         unimplemented!();
     }
 }

@@ -16,20 +16,22 @@ use devtools_traits::WorkerId;
 use dom::bindings::error::Error;
 use js::conversions::ToJSValConvertible;
 use dom::bindings::reflector::Reflector;
-
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 use std::cell::Cell;
 
 #[dom_struct]
-pub struct Promise {
+pub struct Promise<TH: TypeHolderTrait> {
     reflector: Reflector,
+    _p: PhantomData<TH>
 }
 
-impl Promise {
+impl<TH: TypeHolderTrait> Promise<TH> {
     pub fn resolve_native<T>(&self, val: &T) where T: ToJSValConvertible {
         unimplemented!();
     }
 
-    pub fn reject_error(&self, error: Error) {
+    pub fn reject_error(&self, error: Error<TH>) {
         unimplemented!();
     }
 }

@@ -118,6 +118,7 @@ use uuid::Uuid;
 use webrender_api::{DocumentId, ImageKey};
 use webvr_traits::WebVRGamepadHand;
 use std::marker::PhantomData;
+use typeholder::TypeHolderTrait;
 
 /// A trait to allow tracing (only) DOM objects.
 pub unsafe trait JSTraceable {
@@ -350,13 +351,13 @@ unsafe impl<A: JSTraceable, B: JSTraceable, C: JSTraceable> JSTraceable for (A, 
 unsafe_no_jsmanaged_fields!(bool, f32, f64, String, AtomicBool, AtomicUsize, Uuid, char);
 unsafe_no_jsmanaged_fields!(usize, u8, u16, u32, u64);
 unsafe_no_jsmanaged_fields!(isize, i8, i16, i32, i64);
-unsafe_no_jsmanaged_fields!(Error);
+unsafe_no_jsmanaged_fields_generic!(Error<TH>);
 unsafe_no_jsmanaged_fields!(ServoUrl, ImmutableOrigin, MutableOrigin);
 unsafe_no_jsmanaged_fields!(Image, ImageMetadata, ImageCache, PendingImageId);
 unsafe_no_jsmanaged_fields!(Metadata);
 unsafe_no_jsmanaged_fields!(NetworkError);
 unsafe_no_jsmanaged_fields!(Atom, Prefix, LocalName, Namespace, QualName);
-unsafe_no_jsmanaged_fields!(TrustedPromise);
+unsafe_no_jsmanaged_fields_generic!(TrustedPromise<TH>);
 unsafe_no_jsmanaged_fields!(PropertyDeclarationBlock);
 // These three are interdependent, if you plan to put jsmanaged data
 // in one of these make sure it is propagated properly to containing structs

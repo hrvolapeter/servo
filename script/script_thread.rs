@@ -21,14 +21,18 @@ use dom::element::Element;
 use std::rc::Rc;
 use dom::customelementregistry::CallbackReaction;
 use dom::customelementregistry::CustomElementDefinition;
+use typeholder::TypeHolderTrait;
+use std::marker::PhantomData;
 
 #[derive(JSTraceable)]
 // ScriptThread instances are rooted on creation, so this is okay
 #[allow(unrooted_must_root)]
-pub struct ScriptThread {}
+pub struct ScriptThread<TH: TypeHolderTrait> {
+	_p: PhantomData<TH>
+}
 
-impl ScriptThread {
-    pub fn enqueue_callback_reaction(element: &Element,
+impl<TH: TypeHolderTrait> ScriptThread<TH> {
+    pub fn enqueue_callback_reaction(element: &Element<TH>,
                                      reaction: CallbackReaction,
                                      definition: Option<Rc<CustomElementDefinition>>) {
         unimplemented!();
