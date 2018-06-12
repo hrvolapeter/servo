@@ -3,6 +3,7 @@
 use dom::bindings::codegen;
 use js::jsapi::{HandleObject, JSContext};
 use phf;
+use typeholder::TypeHolderTrait;
 
 bitflags! {
     pub struct Globals: u8 {

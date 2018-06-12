@@ -1,4 +1,4 @@
-pub static MAP: phf::Map<&'static [u8], unsafe fn(*mut JSContext, HandleObject)> = ::phf::Map {
+pub fn MAP<TH: TypeHolderTrait>() -> phf::Map<&'static [u8], unsafe fn(*mut JSContext, HandleObject)> { ::phf::Map {
     key: 1897749892740154578,
     disps: ::phf::Slice::Static(&[
         (0, 31),
@@ -56,6 +56,6 @@ pub static MAP: phf::Map<&'static [u8], unsafe fn(*mut JSContext, HandleObject)>
         (9, 199),
     ]),
     entries: ::phf::Slice::Static(&[
-        (b"Attr" as &'static [u8], codegen::Bindings::AttrBinding::AttrBinding::DefineDOMInterface as unsafe fn(_, _)),
+        (b"Attr" as &'static [u8], codegen::Bindings::AttrBinding::AttrBinding::DefineDOMInterface::<TH> as unsafe fn(_, _)),
     ]),
-};
+}}

@@ -338,19 +338,19 @@ pub unsafe fn trace_global(tracer: *mut JSTracer, obj: *mut JSObject) {
 }
 
 /// Enumerate lazy properties of a global object.
-pub unsafe extern "C" fn enumerate_global(cx: *mut JSContext, obj: HandleObject) -> bool {
+pub unsafe extern "C" fn enumerate_global<TH: TypeHolderTrait>(cx: *mut JSContext, obj: HandleObject) -> bool {
     assert!(JS_IsGlobalObject(obj.get()));
     if !JS_EnumerateStandardClasses(cx, obj) {
         return false;
     }
-    for init_fun in InterfaceObjectMap::MAP.values() {
+    for init_fun in InterfaceObjectMap::MAP::<TH>().values() {
         init_fun(cx, obj);
     }
     true
 }
 
 /// Resolve a lazy global property, for interface objects and named constructors.
-pub unsafe extern "C" fn resolve_global(
+pub unsafe extern "C" fn resolve_global<TH: TypeHolderTrait>(
     cx: *mut JSContext,
     obj: HandleObject,
     id: HandleId,
@@ -378,7 +378,7 @@ pub unsafe extern "C" fn resolve_global(
     assert!(!ptr.is_null());
     let bytes = slice::from_raw_parts(ptr, length as usize);
 
-    if let Some(init_fun) = InterfaceObjectMap::MAP.get(bytes) {
+    if let Some(init_fun) = InterfaceObjectMap::MAP::<TH>().get(bytes) {
         init_fun(cx, obj);
         *rval = true;
     } else {

@@ -127,6 +127,7 @@ pub unsafe fn throw_dom_exception<TH: TypeHolderTrait>(cx: *mut JSContext, globa
             assert!(JS_IsExceptionPending(cx));
             return;
         }
+        Error::_p(_) => return,
     };
 
     assert!(!JS_IsExceptionPending(cx));
