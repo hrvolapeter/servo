@@ -4,16 +4,15 @@
 use dom_struct::dom_struct;
 use dom::bindings::reflector::Reflector;
 use dom::bindings::utils::WindowProxyHandler;
-
-
+use typeholder::TypeHolderTrait;
 
 #[dom_struct]
 // NOTE: the browsing context for a window is managed in two places:
 // here, in script, but also in the constellation. The constellation
 // manages the session history, which in script is accessed through
 // History objects, messaging the constellation.
-pub struct WindowProxy {
-    a: Reflector,
+pub struct WindowProxy<TH: TypeHolderTrait> {
+    a: Reflector<TH>,
 }
 
 

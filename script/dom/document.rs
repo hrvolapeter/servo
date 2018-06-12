@@ -179,8 +179,9 @@ pub struct HasBrowsingContext;
 
 /// <https://dom.spec.whatwg.org/#document>
 #[dom_struct]
-pub struct Document<TH: TypeHolderTrait + 'static> {
-    reflector: Reflector
+pub struct Document<TH: TypeHolderTrait> {
+    reflector: Reflector<TH>,
+    _p: PhantomData<TH>
     // node: Node<TH>,
     // window: Dom<Window<TH>>,
     // implementation: MutNullableDom<DOMImplementation<TH>>,
@@ -2098,20 +2099,9 @@ impl<TH: TypeHolderTrait> Document<TH> {
 // }
 
 impl<TH: TypeHolderTrait> Document<TH> {
-    // pub fn new_inherited(window: &Window<TH>,
-    //                      has_browsing_context: HasBrowsingContext,
-    //                      url: Option<ServoUrl>,
-    //                      origin: MutableOrigin,
-    //                      is_html_document: IsHTMLDocument,
-    //                      content_type: Option<Mime>,
-    //                      last_modified: Option<String>,
-    //                      activity: DocumentActivity,
-    //                      source: DocumentSource,
-    //                      doc_loader: DocumentLoader,
-    //                      referrer: Option<String>,
-    //                      referrer_policy: Option<ReferrerPolicy>,
-    //                      canceller: FetchCanceller)
-    //                      -> Document<TH> {
+    pub fn new_inherited()
+                          -> Document<TH> {
+           unimplemented!();
     //     let url = url.unwrap_or_else(|| ServoUrl::parse("about:blank").unwrap());
 
     //     let (ready_state, domcontentloaded_dispatched) = if source == DocumentSource::FromParser {
@@ -2219,7 +2209,7 @@ impl<TH: TypeHolderTrait> Document<TH> {
     //         throw_on_dynamic_markup_insertion_counter: Cell::new(0),
     //         page_showing: Cell::new(false),
     //     }
-    // }
+     }
 
     // // https://dom.spec.whatwg.org/#dom-document-document
     // pub fn Constructor(window: &Window<TH>) -> Fallible<DomRoot<Document<TH>>, TH> {
@@ -2672,7 +2662,7 @@ impl<TH: TypeHolderTrait> Document<TH> {
 //     }
 // }
 
-// impl<TH: TypeHolderTrait> DocumentMethods<TH> for Document<TH> {
+ impl<TH: TypeHolderTrait> DocumentMethods for Document<TH> {
 //     // https://drafts.csswg.org/cssom/#dom-document-stylesheets
 //     fn StyleSheets(&self) -> DomRoot<StyleSheetList<TH>> {
 //         self.stylesheet_list.or_init(|| StyleSheetList::new(&self.window, Dom::from_ref(&self)))
@@ -3461,7 +3451,8 @@ impl<TH: TypeHolderTrait> Document<TH> {
 
 //     #[allow(unsafe_code)]
 //     // https://html.spec.whatwg.org/multipage/#dom-tree-accessors:dom-document-nameditem-filter
-//     unsafe fn NamedGetter(&self, _cx: *mut JSContext, name: DOMString) -> Option<NonNull<JSObject>> {
+    unsafe fn NamedGetter(&self, _cx: *mut JSContext, name: DOMString) -> Option<NonNull<JSObject>> {
+    	unimplemented!();
 //         #[derive(JSTraceable, MallocSizeOf)]
 //         struct NamedElementFilter<THH: TypeHolderTrait + 'static> {
 //             name: Atom,
@@ -3532,13 +3523,13 @@ impl<TH: TypeHolderTrait> Document<TH> {
 //         };
 //         let collection = HTMLCollection::create(self.window(), root, Box::new(filter));
 //         Some(NonNull::new_unchecked(collection.reflector().get_jsobject().get()))
-//     }
+     }
 
 //     // https://html.spec.whatwg.org/multipage/#dom-tree-accessors:supported-property-names
-//     fn SupportedPropertyNames(&self) -> Vec<DOMString> {
-//         // FIXME: unimplemented (https://github.com/servo/servo/issues/7273)
-//         vec![]
-//     }
+     fn SupportedPropertyNames(&self) -> Vec<DOMString> {
+         // FIXME: unimplemented (https://github.com/servo/servo/issues/7273)
+         vec![]
+     }
 
 //     // https://html.spec.whatwg.org/multipage/#dom-document-clear
 //     fn Clear(&self) {
@@ -3882,7 +3873,7 @@ impl<TH: TypeHolderTrait> Document<TH> {
 //     fn ExitFullscreen(&self) -> Rc<Promise<TH>> {
 //         self.exit_fullscreen()
 //     }
-// }
+ }
 
 // fn update_with_current_time_ms(marker: &Cell<u64>) {
 //     if marker.get() == Default::default() {

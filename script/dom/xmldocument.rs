@@ -19,12 +19,12 @@ use std::ptr::NonNull;
 use typeholder::TypeHolderTrait;
 use dom::bindings::conversions::IDLInterface;
 use dom::bindings::utils::DOMClass;
-use dom::bindings::codegen::Bindings::DocumentBinding::DocumentBinding::DocumentMethods;
-
+use dom::bindings::codegen::Bindings::DocumentBinding::DocumentMethods;
+use std::marker::PhantomData;
 // https://dom.spec.whatwg.org/#xmldocument
 #[dom_struct]
-pub struct XMLDocument<TH: TypeHolderTrait + 'static> {
-    document: Document<TH>
+pub struct XMLDocument<TH: TypeHolderTrait> {
+    document: Document<TH>,
 }
 
 impl<TH: TypeHolderTrait> IDLInterface for XMLDocument<TH> {
@@ -45,7 +45,7 @@ impl<TH: TypeHolderTrait> XMLDocument<TH> {
                      activity: DocumentActivity,
                      source: DocumentSource) -> XMLDocument<TH> {
         XMLDocument {
-            document: Document::new_inherited(),
+            document: Document::<TH>::new_inherited(),
         }
     }
 

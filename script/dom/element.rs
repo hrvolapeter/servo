@@ -30,7 +30,7 @@ pub struct CustomElementCreationMode;
 
 #[dom_struct]
 pub struct Element<TH: TypeHolderTrait> {
-    a: Reflector,
+    a: Reflector<TH>,
     _p: PhantomData<TH>,
 }
 

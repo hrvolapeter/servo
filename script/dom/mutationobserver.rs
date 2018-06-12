@@ -18,7 +18,7 @@ pub enum Mutation {
 
 #[dom_struct]
 pub struct MutationObserver<TH: TypeHolderTrait> {
-    a: Reflector,
+    a: Reflector<TH>,
     _p: PhantomData<TH>,
 }
 

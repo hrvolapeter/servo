@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 
 #[dom_struct]
 pub struct Window<TH: TypeHolderTrait> {
-    a: Reflector,
+    a: Reflector<TH>,
     _p: PhantomData<TH>
 }
 

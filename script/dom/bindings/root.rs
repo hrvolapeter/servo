@@ -91,13 +91,13 @@ unsafe impl<T> StableTraceObject for Dom<T>
         // so we need this shenanigan to actually trace the reflector of the
         // T pointer in Dom<T>.
         #[allow(unrooted_must_root)]
-        struct ReflectorStackRoot(Reflector);
-        unsafe impl JSTraceable for ReflectorStackRoot {
+        struct ReflectorStackRoot<THH: TypeHolderTrait>(Reflector<THH>);
+        unsafe impl<THH: TypeHolderTrait> JSTraceable for ReflectorStackRoot<THH> {
             unsafe fn trace(&self, tracer: *mut JSTracer) {
                 trace_reflector(tracer, "on stack", &self.0);
             }
         }
-        unsafe { &*(self.reflector() as *const Reflector as *const ReflectorStackRoot) }
+        unsafe { &*(self.reflector() as *const Reflector<T::TypeHolder> as *const ReflectorStackRoot<T::TypeHolder>) }
     }
 }
 

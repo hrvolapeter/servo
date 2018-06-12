@@ -45,6 +45,8 @@ impl<TH: TypeHolderTrait> Castable for XMLDocument<TH> {}
 impl<TH: TypeHolderTrait> DerivedFrom<Document<TH>> for XMLDocument<TH> {}
 
 impl<TH: TypeHolderTrait> Castable for Document<TH> {}
+impl<TH: TypeHolderTrait> DerivedFrom<Node<TH>> for Document<TH> {}
+impl<TH: TypeHolderTrait> DerivedFrom<Document<TH>> for Document<TH> {}
 
 
 #[derive(Clone, Copy, Debug, PartialEq)]

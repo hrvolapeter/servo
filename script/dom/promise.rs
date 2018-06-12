@@ -22,7 +22,7 @@ use std::cell::Cell;
 
 #[dom_struct]
 pub struct Promise<TH: TypeHolderTrait> {
-    reflector: Reflector,
+    reflector: Reflector<TH>,
     _p: PhantomData<TH>
 }
 

@@ -18,7 +18,7 @@ use std::marker::PhantomData;
 
 #[dom_struct]
 pub struct GlobalScope<TH: TypeHolderTrait> {
-    a: Reflector,
+    a: Reflector<TH>,
     _p: PhantomData<TH>
 }
 
@@ -50,7 +50,7 @@ impl<TH: TypeHolderTrait> GlobalScope<TH> {
         unimplemented!();
     }
 
-    pub fn report_an_error(&self, error_info: ErrorInfo, value: HandleValue) {
+    pub fn report_an_error(&self, error_info: ErrorInfo<TH>, value: HandleValue) {
         unimplemented!();
     }
 }

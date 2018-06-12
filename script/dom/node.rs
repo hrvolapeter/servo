@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 
 #[dom_struct]
 pub struct Node<TH: TypeHolderTrait> {
-    a: Reflector,
+    a: Reflector<TH>,
     _p: PhantomData<TH>,
 }
 
@@ -18,7 +18,7 @@ impl<TH: TypeHolderTrait> IDLInterface for Node<TH> {
     }
 }
 
-impl<TH> PartialEq for Node<TH> {
+impl<TH: TypeHolderTrait> PartialEq for Node<TH> {
     fn eq(&self, other: &Node<TH>) -> bool {
         unimplemented!();
     }

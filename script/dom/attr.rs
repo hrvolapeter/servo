@@ -28,7 +28,7 @@ use typeholder::TypeHolderTrait;
 // https://dom.spec.whatwg.org/#interface-attr
 #[dom_struct]
 pub struct Attr<TH: TypeHolderTrait> {
-    reflector_: Reflector,
+    reflector_: Reflector<TH>,
     identifier: AttrIdentifier,
     value: DomRefCell<AttrValue>,
 
@@ -189,7 +189,7 @@ impl<TH: TypeHolderTrait> Attr<TH> {
             old_value: old_value.clone(),
         };
 
-        MutationObserver::queue_a_mutation_record(owner.upcast::<Node>(), mutation);
+        MutationObserver::queue_a_mutation_record(owner.upcast::<Node<TH>>(), mutation);
 
         if owner.get_custom_element_definition().is_some() {
             let reaction = CallbackReaction::AttributeChanged(name, Some(old_value), Some(new_value), namespace);

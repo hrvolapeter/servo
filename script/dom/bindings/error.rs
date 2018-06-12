@@ -137,7 +137,7 @@ pub unsafe fn throw_dom_exception<TH: TypeHolderTrait>(cx: *mut JSContext, globa
 }
 
 /// A struct encapsulating information about a runtime script error.
-pub struct ErrorInfo {
+pub struct ErrorInfo<TH: TypeHolderTrait> {
     /// The error message.
     pub message: String,
     /// The file name.
@@ -146,10 +146,11 @@ pub struct ErrorInfo {
     pub lineno: c_uint,
     /// The column number.
     pub column: c_uint,
+    pub _p: PhantomData<TH>,
 }
 
-impl ErrorInfo {
-    unsafe fn from_native_error(cx: *mut JSContext, object: HandleObject) -> Option<ErrorInfo> {
+impl<TH: TypeHolderTrait> ErrorInfo<TH> {
+    unsafe fn from_native_error(cx: *mut JSContext, object: HandleObject) -> Option<ErrorInfo<TH>> {
         let report = JS_ErrorFromException(cx, object);
         if report.is_null() {
             return None;
@@ -181,11 +182,12 @@ impl ErrorInfo {
             message: message,
             lineno: lineno,
             column: column,
+            _p: Default::default(),
         })
     }
 
-    fn from_dom_exception(object: HandleObject) -> Option<ErrorInfo> {
-        let exception = match root_from_object::<DOMException>(object.get()) {
+    fn from_dom_exception(object: HandleObject) -> Option<ErrorInfo<TH>> {
+        let exception = match root_from_object::<DOMException<TH>>(object.get()) {
             Ok(exception) => exception,
             Err(_) => return None,
         };
@@ -195,6 +197,7 @@ impl ErrorInfo {
             message: exception.Stringifier().into(),
             lineno: 0,
             column: 0,
+            _p: Default::default(),
         })
     }
 }
@@ -225,6 +228,7 @@ pub unsafe fn report_pending_exception<TH: TypeHolderTrait>(cx: *mut JSContext, 
                 filename: String::new(),
                 lineno: 0,
                 column: 0,
+                _p: Default::default(),
             })
     } else {
         match USVString::from_jsval(cx, value.handle(), ()) {
@@ -233,6 +237,7 @@ pub unsafe fn report_pending_exception<TH: TypeHolderTrait>(cx: *mut JSContext, 
                 filename: String::new(),
                 lineno: 0,
                 column: 0,
+                _p: Default::default(),
             },
             _ => {
                 panic!("Uncaught exception: failed to stringify primitive");
