@@ -970,6 +970,10 @@ impl<TH: TypeHolderTrait> PartialEq for Attr<TH> {
         self as *const Attr<TH> == &*other
     }
 }
+unsafe extern fn getService<TH: TypeHolderTrait>
+(cx: *mut JSContext, argc: libc::c_uint, vp: *mut JSVal) -> bool {
+    unimplemented!();
+}
 
 pub trait AttrMethods<TH: TypeHolderTrait> {
     fn GetNamespaceURI(&self) -> Option<DOMString>;
@@ -986,12 +990,17 @@ pub trait AttrMethods<TH: TypeHolderTrait> {
     fn GetOwnerElement(&self) -> Option<DomRoot<Element<TH>>>;
     fn Specified(&self) -> bool;
 }
+
+unsafe extern fn FOO_getService(cx: *mut JSContext, argc: libc::c_uint, vp: *mut JSVal) -> bool {
+    FOO[0](cx, argc, vp)
+}
+
 const sAttributes_specs: &'static [&'static[JSPropertySpec]] = &[
 &[
     JSPropertySpec {
         name: b"namespaceURI\0" as *const u8 as *const libc::c_char,
         flags: (JSPROP_ENUMERATE | JSPROP_SHARED) as u8,
-        getter: JSNativeWrapper { op: Some(generic_getter), info: &namespaceURI_getterinfo },
+        getter: JSNativeWrapper { op: Some(FOO_getService), info: &namespaceURI_getterinfo },
         setter: JSNativeWrapper { op: None, info: 0 as *const JSJitInfo }
     },
     JSPropertySpec {
@@ -1094,6 +1103,8 @@ static INTERFACE_OBJECT_CLASS: NonCallbackInterfaceObjectClass =
         PrototypeList::ID::Attr,
         0);
 
+static mut FOO: &'static mut [unsafe extern "C" fn(*mut js::jsapi::JSContext, u32, *mut js::jsapi::Value) -> bool] = &mut [];
+
 pub unsafe fn DefineDOMInterface<TH: TypeHolderTrait>(cx: *mut JSContext, global: HandleObject) {
     assert!(!global.get().is_null());
 
@@ -1114,6 +1125,8 @@ pub unsafe fn DefineDOMInterface<TH: TypeHolderTrait>(cx: *mut JSContext, global
     textContent_getterinfo.call = get_textContent::<TH> as *const os::raw::c_void;
     textContent_setterinfo.call = set_textContent::<TH> as *const os::raw::c_void;
     nodeValue_getterinfo.call = get_nodeValue::<TH> as *const os::raw::c_void;
+
+    FOO[0] = getService::<TH> as unsafe extern "C" fn(*mut js::jsapi::JSContext, u32, *mut js::jsapi::Value) -> bool;
 
     rooted!(in(cx) let mut proto = ptr::null_mut::<JSObject>());
     GetProtoObject::<TH>(cx, global, proto.handle_mut());
