@@ -24,7 +24,7 @@ servo_config = {path = "../config"}
 time = "0.1.12"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-task_info = {path = "../../support/rust-task_info"}
+task_info = {path = "../support/rust-task_info"}
 
 [target.'cfg(target_os = "linux")'.dependencies]
 regex = "0.2"
